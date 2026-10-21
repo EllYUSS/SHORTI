@@ -708,6 +708,16 @@ export default function Prototype() {
                       if (video.duration) setForYouProgress((video.currentTime / video.duration) * 100);
                     }}
                     onEnded={advanceForYou}
+                    onVolumeChange={(event) => {
+                      /* Иконка отражает фактическое состояние элемента, а не
+                         отдельную переменную: тогда она не разойдётся с реальностью,
+                         если звук переключит не наша кнопка — например системные
+                         медиаэлементы или переход в нативный полноэкранный плеер.
+                         Аппаратные клавиши громкости телефона веб-странице
+                         недоступны: на iOS громкость принадлежит системе, а
+                         video.volume доступен только для чтения. */
+                      setForYouMuted(event.currentTarget.muted);
+                    }}
                   />
                 ) : (
                   <img className="for-you-art" src={forYouItem.image} alt="" draggable={false} />
