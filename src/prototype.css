@@ -419,7 +419,7 @@ body:has(.full-page-screen),
   position: absolute;
   z-index: 2;
   right: 10px;
-  bottom: calc(var(--app-bottom-inset) + 276px);
+  bottom: calc(var(--app-bottom-inset) + 248px);
   display: flex;
   width: 56px;
   flex-direction: column;
@@ -4313,11 +4313,14 @@ body:has(.full-page-screen),
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.75));
 }
 
-/* Описание стало кнопкой: стрелка после многоточия ведёт на страницу сериала. */
+/* Описание стало кнопкой: стрелка после многоточия ведёт на страницу сериала.
+   Фон обязателен — в проекте у кнопок сбрасываются рамка и шрифт, но не он, и
+   браузер подставляет свой светлый. */
 .for-you-summary {
   gap: 2px;
   padding: 0;
   border: 0;
+  background: transparent;
   text-align: left;
 }
 
