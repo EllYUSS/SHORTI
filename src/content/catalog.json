@@ -1,0 +1,311 @@
+{
+  "categoryLabels": {
+    "HOT": "ХИТЫ",
+    "NEW": "НОВИНКИ",
+    "RANKING": "РЕЙТИНГ"
+  },
+  "genres": [
+    "Боевик",
+    "Детектив",
+    "Мелодрама",
+    "Месть",
+    "Миллиардеры",
+    "Молодёжная драма",
+    "Семейная драма",
+    "Второй шанс"
+  ],
+  "featured": {
+    "id": "moonlit-princess",
+    "title": "Я снова вышла замуж, и…",
+    "genre": "Оборотень",
+    "category": "Фэнтези",
+    "views": "3,5 тыс.",
+    "image": "/assets/feed/fragile-princess.png",
+    "badge": "Новинки № 7",
+    "episodes": 52,
+    "currentEpisode": 1,
+    "summary": "Хрупкая принцесса оборотней пытается начать новую жизнь, но её второй брак раскрывает тайны, способные изменить весь королевский двор.",
+    "cast": [
+      {
+        "name": "Элиз Уинтер",
+        "role": "Айрис",
+        "image": "/assets/posters/forbidden-tide.png"
+      },
+      {
+        "name": "Кай Морено",
+        "role": "Тео",
+        "image": "/assets/posters/reborn-to-love.png"
+      },
+      {
+        "name": "Мара Джеймс",
+        "role": "Джун",
+        "image": "/assets/posters/secret-heir.png"
+      }
+    ]
+  },
+  "shows": [
+    {
+      "id": "prison-king",
+      "title": "Король тюрьмы под прикрытием",
+      "genre": "Боевик",
+      "category": "Боевик",
+      "views": "159,3 млн",
+      "image": "/assets/posters/prison-king.png",
+      "badge": "В тренде",
+      "episodes": 50,
+      "currentEpisode": 9,
+      "summary": "Бывший военный Трой По получает в наследство частную тюрьму, где всем заправляют продажные чиновники. Чтобы вывести их на чистую воду, он становится заключённым под прикрытием. Здесь у каждой тайны есть цена, а у каждого союзника — свой план.",
+      "cast": [
+        {
+          "name": "Марк Херрманн",
+          "role": "Трой По",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Эбигейл Стэнтон",
+          "role": "Майя Рид",
+          "image": "/assets/posters/velvet-revenge.png"
+        },
+        {
+          "name": "Рэйчел Возноу",
+          "role": "Нора Вейл",
+          "image": "/assets/posters/billionaire-contract.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "secret-heir",
+      "title": "Брат, ты слишком поздно раскаялся",
+      "genre": "Молодёжная драма",
+      "category": "Мелодрама",
+      "views": "5,1 млн",
+      "image": "/assets/posters/secret-heir.png",
+      "badge": "В тренде",
+      "episodes": 42,
+      "currentEpisode": 3,
+      "summary": "Студентка, поступившая по стипендии, узнаёт, что семья, отвернувшаяся от неё, скрывала правду о её прошлом. Она возвращается в кампус под новым именем, чтобы сдержать последнее обещание.",
+      "cast": [
+        {
+          "name": "Лена Харт",
+          "role": "Эйвери",
+          "image": "/assets/posters/secret-heir.png"
+        },
+        {
+          "name": "Ноа Вейл",
+          "role": "Эли",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Джулс Парк",
+          "role": "Мина",
+          "image": "/assets/posters/forbidden-tide.png"
+        }
+      ]
+    },
+    {
+      "id": "forbidden-tide",
+      "title": "Запретная близость",
+      "genre": "Семейная драма",
+      "category": "Мелодрама",
+      "views": "11 млн",
+      "image": "/assets/posters/forbidden-tide.png",
+      "episodes": 60,
+      "currentEpisode": 1,
+      "summary": "Каждое лето две семьи встречаются на одном и том же побережье. Но в этот раз давнее обещание сближает их детей и грозит разрушить привычный мир обеих семей.",
+      "cast": [
+        {
+          "name": "Элиз Уинтер",
+          "role": "Айрис",
+          "image": "/assets/posters/forbidden-tide.png"
+        },
+        {
+          "name": "Кай Морено",
+          "role": "Тео",
+          "image": "/assets/posters/reborn-to-love.png"
+        },
+        {
+          "name": "Мара Джеймс",
+          "role": "Джун",
+          "image": "/assets/posters/secret-heir.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "billionaire-contract",
+      "title": "Тайный контракт миллиардера",
+      "genre": "Миллиардеры",
+      "category": "Мелодрама",
+      "views": "48,7 млн",
+      "image": "/assets/posters/billionaire-contract.png",
+      "badge": "Хит",
+      "episodes": 48,
+      "currentEpisode": 12,
+      "summary": "Из-за ошибки в документах талантливая дизайнер заключает сделку с самым закрытым руководителем города. У контракта есть срок окончания. У их доверия — нет.",
+      "cast": [
+        {
+          "name": "Рэйчел Возноу",
+          "role": "Слоан",
+          "image": "/assets/posters/billionaire-contract.png"
+        },
+        {
+          "name": "Эдриан Коул",
+          "role": "Майлз",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Лена Харт",
+          "role": "Пайпер",
+          "image": "/assets/posters/secret-heir.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "velvet-revenge",
+      "title": "Клятва в бархате",
+      "genre": "Месть",
+      "category": "Драма",
+      "views": "23,5 млн",
+      "image": "/assets/posters/velvet-revenge.png",
+      "episodes": 36,
+      "currentEpisode": 6,
+      "summary": "Потеряв всё за одну ночь, молодая наследница возвращается в поместье, где прошло её детство. Она готова вернуть своё имя, но правда меняет все планы.",
+      "cast": [
+        {
+          "name": "Эбигейл Стэнтон",
+          "role": "Вивиан",
+          "image": "/assets/posters/velvet-revenge.png"
+        },
+        {
+          "name": "Марк Херрманн",
+          "role": "Джеймс",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Мара Джеймс",
+          "role": "Клара",
+          "image": "/assets/posters/forbidden-tide.png"
+        }
+      ]
+    },
+    {
+      "id": "reborn-to-love",
+      "title": "Второй шанс на любовь",
+      "genre": "Второй шанс",
+      "category": "Мелодрама",
+      "views": "140,4 млн",
+      "image": "/assets/posters/reborn-to-love.png",
+      "badge": "Хит",
+      "episodes": 54,
+      "currentEpisode": 1,
+      "summary": "Получив шанс изменить прошлое, подающая надежды спортсменка сама выбирает своё будущее. Возможно, именно тренер, который однажды ушёл, поможет ей победить.",
+      "cast": [
+        {
+          "name": "Сейдж Белл",
+          "role": "Райли",
+          "image": "/assets/posters/reborn-to-love.png"
+        },
+        {
+          "name": "Кай Морено",
+          "role": "Мейсон",
+          "image": "/assets/posters/forbidden-tide.png"
+        },
+        {
+          "name": "Джулс Парк",
+          "role": "Тесс",
+          "image": "/assets/posters/secret-heir.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "guardian-secret",
+      "title": "Тайное обещание защитника",
+      "genre": "Детектив",
+      "category": "Триллер",
+      "views": "9,4 млн",
+      "image": "/assets/posters/guardian-secret.png",
+      "badge": "Новинка",
+      "episodes": 40,
+      "currentEpisode": 1,
+      "summary": "Незнакомец оберегает Роуэн с той ночи, когда исчезла её семья. Когда он наконец выходит из тени, ответы оказываются опаснее вопросов.",
+      "cast": [
+        {
+          "name": "Мара Джеймс",
+          "role": "Роуэн",
+          "image": "/assets/posters/guardian-secret.png"
+        },
+        {
+          "name": "Эдриан Коул",
+          "role": "Эш",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Сейдж Белл",
+          "role": "Линн",
+          "image": "/assets/posters/secret-heir.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "last-promise",
+      "title": "Последнее обещание в «Роузвуде»",
+      "genre": "Миллиардеры",
+      "category": "Драма",
+      "views": "32,8 млн",
+      "image": "/assets/posters/last-promise.png",
+      "episodes": 46,
+      "currentEpisode": 4,
+      "summary": "Одно приглашение возвращает молодую дизайнерку в отель, где когда-то работала её мать. Владельцам отеля нужна её подпись, а ей — ответ на вопрос, почему они помнят её имя.",
+      "cast": [
+        {
+          "name": "Эбигейл Стэнтон",
+          "role": "Роуз",
+          "image": "/assets/posters/last-promise.png"
+        },
+        {
+          "name": "Марк Херрманн",
+          "role": "Эван",
+          "image": "/assets/posters/prison-king.png"
+        },
+        {
+          "name": "Рэйчел Возноу",
+          "role": "Мира",
+          "image": "/assets/posters/billionaire-contract.png"
+        }
+      ],
+      "isNew": true
+    },
+    {
+      "id": "family-second-chance",
+      "title": "Семья: второй шанс",
+      "genre": "Семейная драма",
+      "category": "Семья",
+      "views": "18,2 млн",
+      "image": "/assets/posters/family-second-chance.png",
+      "episodes": 52,
+      "currentEpisode": 2,
+      "summary": "Спокойное начало новой жизни объединяет соседей. Отец-одиночка, его давняя подруга и решительная девочка понимают: семью можно обрести снова.",
+      "cast": [
+        {
+          "name": "Кай Морено",
+          "role": "Ноа",
+          "image": "/assets/posters/family-second-chance.png"
+        },
+        {
+          "name": "Элиз Уинтер",
+          "role": "Холли",
+          "image": "/assets/posters/forbidden-tide.png"
+        },
+        {
+          "name": "Сейдж Белл",
+          "role": "Мия",
+          "image": "/assets/posters/reborn-to-love.png"
+        }
+      ]
+    }
+  ]
+}

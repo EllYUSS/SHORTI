@@ -1,0 +1,29 @@
+{
+  "name": "Шорты",
+  "short_name": "Шорты",
+  "start_url": "/?preview=full",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "display_override": [
+    "fullscreen",
+    "standalone",
+    "minimal-ui"
+  ]
+}
