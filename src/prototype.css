@@ -419,7 +419,7 @@ body:has(.full-page-screen),
   position: absolute;
   z-index: 2;
   right: 10px;
-  bottom: calc(var(--app-bottom-inset) + 220px);
+  bottom: calc(var(--app-bottom-inset) + 188px);
   display: flex;
   width: 56px;
   flex-direction: column;
