@@ -20,7 +20,7 @@
     "genre": "Оборотень",
     "category": "Фэнтези",
     "views": "3,5 тыс.",
-    "image": "/assets/feed/fragile-princess.png",
+    "image": "/assets/feed/fragile-princess.webp",
     "badge": "Новинки № 7",
     "episodes": 52,
     "currentEpisode": 1,
@@ -29,17 +29,17 @@
       {
         "name": "Элиз Уинтер",
         "role": "Айрис",
-        "image": "/assets/posters/forbidden-tide.png"
+        "image": "/assets/posters/forbidden-tide.webp"
       },
       {
         "name": "Кай Морено",
         "role": "Тео",
-        "image": "/assets/posters/reborn-to-love.png"
+        "image": "/assets/posters/reborn-to-love.webp"
       },
       {
         "name": "Мара Джеймс",
         "role": "Джун",
-        "image": "/assets/posters/secret-heir.png"
+        "image": "/assets/posters/secret-heir.webp"
       }
     ]
   },
@@ -50,7 +50,7 @@
       "genre": "Боевик",
       "category": "Боевик",
       "views": "159,3 млн",
-      "image": "/assets/posters/prison-king.png",
+      "image": "/assets/posters/prison-king.webp",
       "badge": "В тренде",
       "episodes": 50,
       "currentEpisode": 9,
@@ -59,17 +59,17 @@
         {
           "name": "Марк Херрманн",
           "role": "Трой По",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Эбигейл Стэнтон",
           "role": "Майя Рид",
-          "image": "/assets/posters/velvet-revenge.png"
+          "image": "/assets/posters/velvet-revenge.webp"
         },
         {
           "name": "Рэйчел Возноу",
           "role": "Нора Вейл",
-          "image": "/assets/posters/billionaire-contract.png"
+          "image": "/assets/posters/billionaire-contract.webp"
         }
       ],
       "isNew": true
@@ -80,7 +80,7 @@
       "genre": "Молодёжная драма",
       "category": "Мелодрама",
       "views": "5,1 млн",
-      "image": "/assets/posters/secret-heir.png",
+      "image": "/assets/posters/secret-heir.webp",
       "badge": "В тренде",
       "episodes": 42,
       "currentEpisode": 3,
@@ -89,17 +89,17 @@
         {
           "name": "Лена Харт",
           "role": "Эйвери",
-          "image": "/assets/posters/secret-heir.png"
+          "image": "/assets/posters/secret-heir.webp"
         },
         {
           "name": "Ноа Вейл",
           "role": "Эли",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Джулс Парк",
           "role": "Мина",
-          "image": "/assets/posters/forbidden-tide.png"
+          "image": "/assets/posters/forbidden-tide.webp"
         }
       ]
     },
@@ -109,7 +109,7 @@
       "genre": "Семейная драма",
       "category": "Мелодрама",
       "views": "11 млн",
-      "image": "/assets/posters/forbidden-tide.png",
+      "image": "/assets/posters/forbidden-tide.webp",
       "episodes": 60,
       "currentEpisode": 1,
       "summary": "Каждое лето две семьи встречаются на одном и том же побережье. Но в этот раз давнее обещание сближает их детей и грозит разрушить привычный мир обеих семей.",
@@ -117,17 +117,17 @@
         {
           "name": "Элиз Уинтер",
           "role": "Айрис",
-          "image": "/assets/posters/forbidden-tide.png"
+          "image": "/assets/posters/forbidden-tide.webp"
         },
         {
           "name": "Кай Морено",
           "role": "Тео",
-          "image": "/assets/posters/reborn-to-love.png"
+          "image": "/assets/posters/reborn-to-love.webp"
         },
         {
           "name": "Мара Джеймс",
           "role": "Джун",
-          "image": "/assets/posters/secret-heir.png"
+          "image": "/assets/posters/secret-heir.webp"
         }
       ],
       "isNew": true
@@ -138,7 +138,7 @@
       "genre": "Миллиардеры",
       "category": "Мелодрама",
       "views": "48,7 млн",
-      "image": "/assets/posters/billionaire-contract.png",
+      "image": "/assets/posters/billionaire-contract.webp",
       "badge": "Хит",
       "episodes": 48,
       "currentEpisode": 12,
@@ -147,17 +147,17 @@
         {
           "name": "Рэйчел Возноу",
           "role": "Слоан",
-          "image": "/assets/posters/billionaire-contract.png"
+          "image": "/assets/posters/billionaire-contract.webp"
         },
         {
           "name": "Эдриан Коул",
           "role": "Майлз",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Лена Харт",
           "role": "Пайпер",
-          "image": "/assets/posters/secret-heir.png"
+          "image": "/assets/posters/secret-heir.webp"
         }
       ],
       "isNew": true
@@ -168,7 +168,7 @@
       "genre": "Месть",
       "category": "Драма",
       "views": "23,5 млн",
-      "image": "/assets/posters/velvet-revenge.png",
+      "image": "/assets/posters/velvet-revenge.webp",
       "episodes": 36,
       "currentEpisode": 6,
       "summary": "Потеряв всё за одну ночь, молодая наследница возвращается в поместье, где прошло её детство. Она готова вернуть своё имя, но правда меняет все планы.",
@@ -176,17 +176,17 @@
         {
           "name": "Эбигейл Стэнтон",
           "role": "Вивиан",
-          "image": "/assets/posters/velvet-revenge.png"
+          "image": "/assets/posters/velvet-revenge.webp"
         },
         {
           "name": "Марк Херрманн",
           "role": "Джеймс",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Мара Джеймс",
           "role": "Клара",
-          "image": "/assets/posters/forbidden-tide.png"
+          "image": "/assets/posters/forbidden-tide.webp"
         }
       ]
     },
@@ -196,7 +196,7 @@
       "genre": "Второй шанс",
       "category": "Мелодрама",
       "views": "140,4 млн",
-      "image": "/assets/posters/reborn-to-love.png",
+      "image": "/assets/posters/reborn-to-love.webp",
       "badge": "Хит",
       "episodes": 54,
       "currentEpisode": 1,
@@ -205,17 +205,17 @@
         {
           "name": "Сейдж Белл",
           "role": "Райли",
-          "image": "/assets/posters/reborn-to-love.png"
+          "image": "/assets/posters/reborn-to-love.webp"
         },
         {
           "name": "Кай Морено",
           "role": "Мейсон",
-          "image": "/assets/posters/forbidden-tide.png"
+          "image": "/assets/posters/forbidden-tide.webp"
         },
         {
           "name": "Джулс Парк",
           "role": "Тесс",
-          "image": "/assets/posters/secret-heir.png"
+          "image": "/assets/posters/secret-heir.webp"
         }
       ],
       "isNew": true
@@ -226,7 +226,7 @@
       "genre": "Детектив",
       "category": "Триллер",
       "views": "9,4 млн",
-      "image": "/assets/posters/guardian-secret.png",
+      "image": "/assets/posters/guardian-secret.webp",
       "badge": "Новинка",
       "episodes": 40,
       "currentEpisode": 1,
@@ -235,17 +235,17 @@
         {
           "name": "Мара Джеймс",
           "role": "Роуэн",
-          "image": "/assets/posters/guardian-secret.png"
+          "image": "/assets/posters/guardian-secret.webp"
         },
         {
           "name": "Эдриан Коул",
           "role": "Эш",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Сейдж Белл",
           "role": "Линн",
-          "image": "/assets/posters/secret-heir.png"
+          "image": "/assets/posters/secret-heir.webp"
         }
       ],
       "isNew": true
@@ -256,7 +256,7 @@
       "genre": "Миллиардеры",
       "category": "Драма",
       "views": "32,8 млн",
-      "image": "/assets/posters/last-promise.png",
+      "image": "/assets/posters/last-promise.webp",
       "episodes": 46,
       "currentEpisode": 4,
       "summary": "Одно приглашение возвращает молодую дизайнерку в отель, где когда-то работала её мать. Владельцам отеля нужна её подпись, а ей — ответ на вопрос, почему они помнят её имя.",
@@ -264,17 +264,17 @@
         {
           "name": "Эбигейл Стэнтон",
           "role": "Роуз",
-          "image": "/assets/posters/last-promise.png"
+          "image": "/assets/posters/last-promise.webp"
         },
         {
           "name": "Марк Херрманн",
           "role": "Эван",
-          "image": "/assets/posters/prison-king.png"
+          "image": "/assets/posters/prison-king.webp"
         },
         {
           "name": "Рэйчел Возноу",
           "role": "Мира",
-          "image": "/assets/posters/billionaire-contract.png"
+          "image": "/assets/posters/billionaire-contract.webp"
         }
       ],
       "isNew": true
@@ -285,7 +285,7 @@
       "genre": "Семейная драма",
       "category": "Семья",
       "views": "18,2 млн",
-      "image": "/assets/posters/family-second-chance.png",
+      "image": "/assets/posters/family-second-chance.webp",
       "episodes": 52,
       "currentEpisode": 2,
       "summary": "Спокойное начало новой жизни объединяет соседей. Отец-одиночка, его давняя подруга и решительная девочка понимают: семью можно обрести снова.",
@@ -293,17 +293,17 @@
         {
           "name": "Кай Морено",
           "role": "Ноа",
-          "image": "/assets/posters/family-second-chance.png"
+          "image": "/assets/posters/family-second-chance.webp"
         },
         {
           "name": "Элиз Уинтер",
           "role": "Холли",
-          "image": "/assets/posters/forbidden-tide.png"
+          "image": "/assets/posters/forbidden-tide.webp"
         },
         {
           "name": "Сейдж Белл",
           "role": "Мия",
-          "image": "/assets/posters/reborn-to-love.png"
+          "image": "/assets/posters/reborn-to-love.webp"
         }
       ]
     }

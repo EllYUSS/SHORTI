@@ -9,14 +9,12 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   Cross1Icon,
-  InfoCircledIcon,
   LayersIcon,
   LockClosedIcon,
   MagnifyingGlassIcon,
   MixerHorizontalIcon,
   PauseIcon,
   QuestionMarkCircledIcon,
-  ReloadIcon,
   RocketIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
@@ -329,14 +327,15 @@ export default function Prototype() {
     let result = [...shows];
     if (selectedCategory === "NEW") result = result.filter((show) => show.isNew);
     if (selectedCategory === "RANKING") result = result.sort((a, b) => Number.parseFloat(b.views.replace(",", ".")) - Number.parseFloat(a.views.replace(",", ".")));
-    if (selectedCategory === "ANIME") result = [];
     if (selectedGenres.length > 0) result = result.filter((show) => selectedGenres.includes(show.genre));
-    const normalizedSearch = search.trim().toLowerCase();
+    /* Запрос применяется только на своём экране: раньше он молча фильтровал и
+       главную ленту, где поля поиска нет и сбросить его нечем. */
+    const normalizedSearch = page === "search" ? search.trim().toLowerCase() : "";
     if (normalizedSearch) {
       result = result.filter((show) => `${show.title} ${show.genre} ${show.category}`.toLowerCase().includes(normalizedSearch));
     }
     return result;
-  }, [search, selectedCategory, selectedGenres]);
+  }, [page, search, selectedCategory, selectedGenres]);
 
   const openDetail = (show: Show) => {
     keyboard.hide();
@@ -349,8 +348,7 @@ export default function Prototype() {
 
   const toggleSaved = (show: Show) => {
     setSavedIds((ids) => (ids.includes(show.id) ? ids.filter((id) => id !== show.id) : [show.id, ...ids]));
-    setToast(savedIds.includes(show.id) ? "Удалено из избранного" : "Добавлено в избранное");
-    window.setTimeout(() => setToast(""), 1800);
+    showToast(savedIds.includes(show.id) ? "Удалено из избранного" : "Добавлено в избранное");
   };
 
   const shareShow = async (show: Show) => {
@@ -361,12 +359,10 @@ export default function Prototype() {
         return;
       }
       await navigator.clipboard.writeText(`${show.title}\n${shareUrl}`);
-      setToast("Ссылка скопирована");
-      window.setTimeout(() => setToast(""), 1800);
+      showToast("Ссылка скопирована");
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
-      setToast("Не удалось поделиться сериалом");
-      window.setTimeout(() => setToast(""), 1800);
+      showToast("Не удалось поделиться сериалом");
     }
   };
 
@@ -396,8 +392,7 @@ export default function Prototype() {
 
   const selectEpisode = (episode: number) => {
     if (episode > currentEpisode + 12) {
-      setToast("Для этой серии нужен безлимитный доступ");
-      window.setTimeout(() => setToast(""), 1800);
+      showToast("Для этой серии нужен безлимитный доступ");
       return;
     }
 
@@ -429,13 +424,20 @@ export default function Prototype() {
   const onComing = (label: string) => {
     keyboard.hide();
     setSheet("coming");
-    setToast(`Раздел «${label}» скоро появится`);
-    window.setTimeout(() => setToast(""), 1800);
+    showToast(`Раздел «${label}» скоро появится`);
   };
 
+  /* Один таймер на все сообщения: без отмены предыдущего второй тост подряд
+     гасился его таймером раньше срока. */
+  const toastTimerRef = useRef<number | null>(null);
+
   const showToast = (message: string) => {
+    if (toastTimerRef.current !== null) window.clearTimeout(toastTimerRef.current);
     setToast(message);
-    window.setTimeout(() => setToast(""), 1800);
+    toastTimerRef.current = window.setTimeout(() => {
+      setToast("");
+      toastTimerRef.current = null;
+    }, 1800);
   };
 
   const openAccountFlowPage = (nextPage: AccountFlowPage | "exchange") => {
@@ -648,14 +650,7 @@ export default function Prototype() {
 
         {page === "home" ? (
           <main className="home-content">
-            {selectedCategory === "ANIME" ? (
-              <div className="empty-state">
-                <span className="empty-icon"><PlayOutlineIcon size={25} /></span>
-                <h2>Скоро появятся новые истории</h2>
-                <p>Аниме-сериалы уже в пути. А пока посмотрите свежие мелодрамы.</p>
-                <button type="button" className="text-action" onClick={() => setSelectedCategory("HOT")}>Смотреть хиты</button>
-              </div>
-            ) : visibleShows.length ? (
+            {visibleShows.length ? (
               <>
                 <div className="section-heading"><h1>{selectedCategory === "HOT" ? "Сейчас популярно" : selectedCategory === "RANKING" ? "Лучшие сериалы" : "Новые серии"}</h1><span>Обновлено сегодня</span></div>
                 <div className="poster-grid">
@@ -699,7 +694,7 @@ export default function Prototype() {
             <div className="profile-heading">
               <span className="profile-avatar"><ProfileTabIcon active={false} /></span>
               <h1>Elvin Yusifov</h1>
-              <button className="account-uid" type="button" aria-label="Скопировать UID" onClick={() => { void navigator.clipboard?.writeText("1551745887"); setToast("UID скопирован"); window.setTimeout(() => setToast(""), 1800); }}>
+              <button className="account-uid" type="button" aria-label="Скопировать UID" onClick={() => { void navigator.clipboard?.writeText("1551745887"); showToast("UID скопирован"); }}>
                 <span>UID: 1551745887</span><AccountIcon name="copy" size={16} />
               </button>
             </div>
@@ -820,7 +815,7 @@ export default function Prototype() {
             </section>
 
             <section className="wallet-payment-provider" aria-label="ЮKassa">
-              <img className="wallet-yookassa-logo" src="https://yookassa.ru/files/Guide_files/logo-white.svg" alt="ЮKassa" />
+              <img className="wallet-yookassa-logo" src="/assets/payment/yookassa-white.svg" alt="ЮKassa" />
               <div className="wallet-payment-provider-copy">
                 <span>Оплата и пополнение кошелька</span>
               </div>
@@ -830,6 +825,7 @@ export default function Prototype() {
             <section className="wallet-history-group" aria-label="История и операции">
               <button type="button" onClick={() => openAccountFlowPage("coin-history")}>История монет<ChevronRightIcon width={18} height={18} /></button>
               <button type="button" onClick={() => openAccountFlowPage("transaction-history")}>История транзакций<ChevronRightIcon width={18} height={18} /></button>
+              <button type="button" onClick={() => openAccountFlowPage("exchange")}>Обмен VIP и монет<ChevronRightIcon width={18} height={18} /></button>
             </section>
 
             <button className="wallet-history-group wallet-unlock-row" type="button" onClick={() => openAccountFlowPage("auto-unlock")}>
@@ -1039,7 +1035,7 @@ export default function Prototype() {
             <p className="exchange-subtitle">Введите промокод, чтобы получить награду</p>
             <div className="exchange-form">
               <KeyboardInput aria-label="Промокод" placeholder="Введите промокод" value={promoCode} onChange={(event) => setPromoCode(event.currentTarget.value)} onBlur={() => keyboard.hide()} />
-              <button type="button" disabled={!promoCode.trim()} onClick={() => { keyboard.hide(); setToast("Промокод не найден"); window.setTimeout(() => setToast(""), 1800); }}>Обменять</button>
+              <button type="button" disabled={!promoCode.trim()} onClick={() => { keyboard.hide(); showToast("Промокод не найден"); }}>Обменять</button>
             </div>
             <section className="exchange-notice">
               <h3>Уведомление</h3>
@@ -1265,7 +1261,7 @@ export default function Prototype() {
                 <button className={rating <= selectedRating ? "is-selected" : ""} key={rating} type="button" role="radio" aria-checked={selectedRating === rating} aria-label={`${rating} из 5`} onClick={() => setSelectedRating(rating)}><StarIcon width={29} height={29} /></button>
               ))}
             </div>
-            <button className="sheet-primary" type="button" onClick={() => { setSheet(null); setToast("Спасибо за оценку!"); window.setTimeout(() => setToast(""), 1800); }}>Да</button>
+            <button className="sheet-primary" type="button" onClick={() => { setSheet(null); showToast("Спасибо за оценку!"); }}>Да</button>
           </div>
         ) : null}
         {sheet === "coming" ? <div className="coming-content"><RocketIcon width={28} height={28} /><p>Мы добавляем новые способы находить сериалы и сохранять любимые истории.</p><button className="sheet-primary" type="button" onClick={() => setSheet(null)}>Понятно</button></div> : null}
@@ -1285,8 +1281,7 @@ export default function Prototype() {
                 const action = settingsDialog;
                 setSettingsDialog(null);
                 if (action === "cache") {
-                  setToast("Кэш очищен");
-                  window.setTimeout(() => setToast(""), 1800);
+                  showToast("Кэш очищен");
                 }
               }}>{settingsDialog === "cache" ? "Очистить" : "ОК"}</button>
             </div>
