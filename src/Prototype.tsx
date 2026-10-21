@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import {
   ArrowLeftIcon,
@@ -232,7 +232,6 @@ export default function Prototype() {
   const keyboard = useKeyboard();
   const [page, setPage] = useState<Page>("home");
   const [pageDirection, setPageDirection] = useState(1);
-  const [returnPage, setReturnPage] = useState<MainPage>("home");
   const [selectedShow, setSelectedShow] = useState<Show>(shows[0]);
   const [selectedCategory, setSelectedCategory] = useState("HOT");
   const [search, setSearch] = useState("");
@@ -250,7 +249,7 @@ export default function Prototype() {
   const [coinHistoryFilterOpen, setCoinHistoryFilterOpen] = useState(false);
   const [coinAlertsEnabled, setCoinAlertsEnabled] = useState(false);
   const [autoUnlockEnabled, setAutoUnlockEnabled] = useState(true);
-  const [accountPageStack, setAccountPageStack] = useState<Page[]>([]);
+  const [navStack, setNavStack] = useState<Page[]>([]);
   const [editList, setEditList] = useState(false);
   const [expandedSynopsis, setExpandedSynopsis] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -262,7 +261,6 @@ export default function Prototype() {
   const [watchSynopsisExpanded, setWatchSynopsisExpanded] = useState(false);
   const [forYouLiked, setForYouLiked] = useState(false);
   const [forYouProgress, setForYouProgress] = useState(20);
-  const [watchReturnPage, setWatchReturnPage] = useState<"detail" | "for-you">("detail");
   const [toast, setToast] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [notificationCategory, setNotificationCategory] = useState<"new" | "system">("new");
@@ -279,6 +277,36 @@ export default function Prototype() {
     const purpleTopped = page === "home" || page === "search";
     meta.setAttribute("content", purpleTopped ? "#240c37" : "#050505");
   }, [page]);
+
+  /* iOS всегда возвращает список туда, где его оставили. Позиция пишется на
+     каждый скролл и восстанавливается, когда экран снова становится текущим. */
+  const scrollMemory = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    /* Во время перехода в DOM два слоя; нужен скроллер текущего экрана, а не
+       последний в разметке. */
+    const scroller = document.querySelector<HTMLElement>(
+      `.page-transition-layer[data-page="${page}"] .mobile-scroll`,
+    );
+    if (!scroller) return;
+
+    const saved = scrollMemory.current[page];
+    if (saved) scroller.scrollTop = saved;
+
+    const onScroll = () => { scrollMemory.current[page] = scroller.scrollTop; };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => scroller.removeEventListener("scroll", onScroll);
+  }, [page]);
+
+  /* Системный жест «назад» в Safari — это кнопка браузера, поэтому обработка
+     popstate даёт его бесплатно. С корневой вкладки стек пуст, и браузер уходит
+     со страницы — для веб-приложения это ожидаемое поведение, перехватывать его
+     не нужно. Без списка зависимостей, чтобы обработчик видел свежее состояние. */
+  useEffect(() => {
+    const onPop = () => { goBack(); };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  });
 
   useEffect(() => {
     if (hourlyRewardReadyAt === null) {
@@ -312,7 +340,7 @@ export default function Prototype() {
 
   const openDetail = (show: Show) => {
     keyboard.hide();
-    if (page === "home" || page === "for-you" || page === "search" || page === "profile" || page === "library") setReturnPage(page);
+    pushPage();
     setSelectedShow(show);
     setExpandedSynopsis(false);
     setPageDirection(1);
@@ -347,7 +375,7 @@ export default function Prototype() {
     setSelectedShow(show);
     setCurrentEpisode(show.currentEpisode || 1);
     if (historyEnabled) setHistoryIds((ids) => [show.id, ...ids.filter((id) => id !== show.id)]);
-    setWatchReturnPage(page === "for-you" ? "for-you" : "detail");
+    pushPage();
     setEpisodeSheetOpen(false);
     setWatchSynopsisExpanded(false);
     setPlaying(false);
@@ -379,16 +407,22 @@ export default function Prototype() {
     if (historyEnabled) setHistoryIds((ids) => [selectedShow.id, ...ids.filter((id) => id !== selectedShow.id)]);
   };
 
+  /* Кладёт текущий экран в стек и добавляет запись в историю браузера. В
+     Safari на iOS свайп от левого края — это и есть кнопка «назад», поэтому
+     корректная история даёт системный жест без собственного обработчика. */
+  const pushPage = () => {
+    keyboard.hide();
+    setNavStack((stack) => [...stack, page]);
+    setPageDirection(1);
+    if (typeof window !== "undefined") window.history.pushState({ shorty: true }, "");
+  };
+
   const navigate = (nextPage: MainTab) => {
     keyboard.hide();
+    setNavStack([]);
     if (nextPage === "search") setSelectedCategory("HOT");
     const currentTab: MainTab | null = page === "library" ? "profile" : page in mainTabOrder ? page as MainTab : null;
     setPageDirection(currentTab === null || mainTabOrder[nextPage] >= mainTabOrder[currentTab] ? 1 : -1);
-    setPage(nextPage);
-  };
-
-  const returnToPage = (nextPage: Page) => {
-    setPageDirection(-1);
     setPage(nextPage);
   };
 
@@ -405,31 +439,27 @@ export default function Prototype() {
   };
 
   const openAccountFlowPage = (nextPage: AccountFlowPage | "exchange") => {
-    keyboard.hide();
-    setAccountPageStack((stack) => [...stack, page]);
-    setPageDirection(1);
+    pushPage();
     setPage(nextPage);
   };
 
   const openSettingsPage = (nextPage: SettingsPage) => {
-    keyboard.hide();
-    setPageDirection(1);
+    pushPage();
     setPage(nextPage);
   };
 
-  const returnFromAccountPage = () => {
+  /* Единственный путь возврата: кнопка в углу, жест от края и кнопка браузера
+     ведут сюда. Стек делает поведение одинаковым для любого экрана, и новый
+     экран не требует правки цепочки условий. */
+  const goBack = () => {
     keyboard.hide();
+    setEpisodeSheetOpen(false);
+    if (navStack.length === 0) return false;
+    const previousPage = navStack[navStack.length - 1];
+    setNavStack((stack) => stack.slice(0, -1));
     setPageDirection(-1);
-    if (accountPageStack.length > 0 && (page === "exchange" || page === "store" || page === "rewards" || page === "coin-history" || page === "coin-expiry" || page === "transaction-history" || page === "auto-unlock")) {
-      const previousPage = accountPageStack[accountPageStack.length - 1];
-      setAccountPageStack((stack) => stack.slice(0, -1));
-      setPage(previousPage);
-      return;
-    }
-    if (page === "privacy") setPage("recommendations");
-    else if (page === "settings" || page === "wallet" || page === "exchange" || page === "rewards") setPage("profile");
-    else if (page === "store" || page === "coin-history" || page === "coin-expiry" || page === "transaction-history" || page === "auto-unlock") setPage("wallet");
-    else setPage("settings");
+    setPage(previousPage);
+    return true;
   };
 
   const toggleHistoryPreference = () => {
@@ -465,10 +495,11 @@ export default function Prototype() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="stream-app">
+    <div className="stream-app" data-page={page}>
       <AnimatePresence initial={false} mode="sync" custom={pageDirection}>
       <motion.div
         key={page}
+        data-page={page}
         className="page-transition-layer"
         custom={pageDirection}
         variants={pageSlideVariants}
@@ -518,33 +549,33 @@ export default function Prototype() {
 
       {page === "detail" ? (
         <header className="detail-toolbar">
-          <button className="round-icon-button" type="button" aria-label="Назад" onClick={() => returnToPage(returnPage)}><ArrowLeftIcon width={22} height={22} /></button>
+          <button className="round-icon-button" type="button" aria-label="Назад" onClick={() => goBack()}><ArrowLeftIcon width={22} height={22} /></button>
         </header>
       ) : null}
 
       {page === "library" ? (
         <header className="library-toolbar">
-          <button className="round-icon-button" type="button" aria-label="Назад в профиль" onClick={() => returnToPage("profile")}><ArrowLeftIcon width={22} height={22} /></button>
+          <button className="round-icon-button" type="button" aria-label="Назад в профиль" onClick={() => goBack()}><ArrowLeftIcon width={22} height={22} /></button>
           <h1>Мой список</h1>
         </header>
       ) : null}
 
       {page === "watch" ? (
         <header className="watch-toolbar">
-          <button className="round-icon-button" type="button" aria-label="Закрыть плеер" onClick={() => { setPlaying(false); returnToPage(watchReturnPage); }}><ArrowLeftIcon width={22} height={22} /></button>
+          <button className="round-icon-button" type="button" aria-label="Закрыть плеер" onClick={() => { setPlaying(false); goBack(); }}><ArrowLeftIcon width={22} height={22} /></button>
         </header>
       ) : null}
 
       {page === "profile" ? (
         <header className="profile-toolbar" aria-label="Действия аккаунта">
-          <button className="profile-toolbar-button" type="button" aria-label="Уведомления" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("notifications"); }}><AccountIcon name="mail" /></button>
-          <button className="profile-toolbar-button" type="button" aria-label="Настройки" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("settings"); }}><AccountIcon name="settings" /></button>
+          <button className="profile-toolbar-button" type="button" aria-label="Уведомления" onClick={() => { pushPage(); setPage("notifications"); }}><AccountIcon name="mail" /></button>
+          <button className="profile-toolbar-button" type="button" aria-label="Настройки" onClick={() => { pushPage(); setPage("settings"); }}><AccountIcon name="settings" /></button>
         </header>
       ) : null}
 
       {page === "notifications" ? (
         <header className="notification-toolbar">
-          <button className="round-icon-button" type="button" aria-label="Назад в профиль" onClick={() => { keyboard.hide(); setPageDirection(-1); setPage("profile"); }}><ArrowLeftIcon width={22} height={22} /></button>
+          <button className="round-icon-button" type="button" aria-label="Назад в профиль" onClick={() => goBack()}><ArrowLeftIcon width={22} height={22} /></button>
           <div className="notification-tabs" role="tablist" aria-label="Тип уведомлений">
             <button type="button" role="tab" aria-selected={notificationCategory === "new"} className={notificationCategory === "new" ? "is-selected" : ""} onClick={() => setNotificationCategory("new")}>Новое</button>
             <button type="button" role="tab" aria-selected={notificationCategory === "system"} className={notificationCategory === "system" ? "is-selected" : ""} onClick={() => setNotificationCategory("system")}>Система</button>
@@ -555,7 +586,7 @@ export default function Prototype() {
 
       {page === "settings" || page === "wallet" || page === "exchange" || page === "language" || page === "account-management" || page === "recommendations" || page === "privacy" || page === "legal" || page === "store" || page === "rewards" || page === "coin-history" || page === "coin-expiry" || page === "transaction-history" || page === "auto-unlock" ? (
         <header className={`account-internal-toolbar ${page === "coin-expiry" ? "is-coin-expiry" : ""}`}>
-          <button className="round-icon-button" type="button" aria-label="Назад" onClick={returnFromAccountPage}><ArrowLeftIcon width={22} height={22} /></button>
+          <button className="round-icon-button" type="button" aria-label="Назад" onClick={() => goBack()}><ArrowLeftIcon width={22} height={22} /></button>
           {accountPageTitles[page] ? <h1>{accountPageTitles[page]}</h1> : <span aria-hidden="true" />}
           {page === "store" ? <button className="account-toolbar-action" type="button" onClick={() => showToast("Покупки восстановлены")}>Восстановить</button> : <span aria-hidden="true" />}
         </header>
@@ -674,9 +705,9 @@ export default function Prototype() {
             </div>
 
             <section className="account-wallet" aria-label="Мой кошелёк">
-              <button className="account-section-title" type="button" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("wallet"); }}><strong>Мой кошелёк</strong><ChevronRightIcon width={18} height={18} /></button>
+              <button className="account-section-title" type="button" onClick={() => { pushPage(); setPage("wallet"); }}><strong>Мой кошелёк</strong><ChevronRightIcon width={18} height={18} /></button>
               <div className="account-wallet-balances">
-                <button className="account-balance" type="button" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("wallet"); }}>
+                <button className="account-balance" type="button" onClick={() => { pushPage(); setPage("wallet"); }}>
                   <span className="account-balance-icon is-coin"><AccountIcon name="coin" size={44} /></span>
                   <span><strong>{coinBalance}</strong><small>Монеты</small></span>
                 </button>
@@ -684,7 +715,7 @@ export default function Prototype() {
             </section>
 
             <section className="account-feature-panels" aria-label="Список и награды">
-              <button className="account-feature-panel" type="button" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("library"); }}>
+              <button className="account-feature-panel" type="button" onClick={() => { pushPage(); setPage("library"); }}>
                 <span className="account-feature-icon"><AccountIcon name="bookmark" size={22} /></span>
                 <span className="account-feature-copy"><strong>Мой список</strong><small>Избранное и история просмотра</small></span>
                 <ChevronRightIcon width={18} height={18} />
@@ -697,7 +728,7 @@ export default function Prototype() {
             </section>
 
             <section className="account-link-group" aria-label="Уведомления и помощь">
-              <button className="account-link-row" type="button" onClick={() => { keyboard.hide(); setPageDirection(1); setPage("notifications"); }}><span className="account-link-icon"><AccountIcon name="notifications" /></span><span>Уведомления</span><ChevronRightIcon width={18} height={18} /></button>
+              <button className="account-link-row" type="button" onClick={() => { pushPage(); setPage("notifications"); }}><span className="account-link-icon"><AccountIcon name="notifications" /></span><span>Уведомления</span><ChevronRightIcon width={18} height={18} /></button>
               <button className="account-link-row" type="button" onClick={() => onComing("Обратная связь")}><span className="account-link-icon"><AccountIcon name="feedback" /></span><span>Обратная связь</span><ChevronRightIcon width={18} height={18} /></button>
             </section>
           </main>
@@ -1164,7 +1195,7 @@ export default function Prototype() {
             <div className="episodes-sheet-grabber" aria-hidden="true"><span /></div>
             <div className="episodes-sheet-header">
               <img src={selectedShow.image} alt="" draggable={false} />
-              <button className="episodes-show-title" type="button" onClick={() => { setEpisodeSheetOpen(false); returnToPage("detail"); }}>
+              <button className="episodes-show-title" type="button" onClick={() => { setEpisodeSheetOpen(false); goBack(); }}>
                 <strong>{selectedShow.title}</strong><ChevronRightIcon width={19} height={19} />
               </button>
               <button className="episodes-sheet-close" type="button" aria-label="Закрыть" onClick={() => setEpisodeSheetOpen(false)}><Cross1Icon width={16} height={16} /></button>
