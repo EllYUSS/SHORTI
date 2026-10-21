@@ -2,3 +2,6 @@ node_modules/
 dist/
 test-results/
 playwright-report/
+
+# Local preview server config: absolute paths to this machine
+.claude/launch.json
