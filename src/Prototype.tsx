@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import {
   ArrowLeftIcon,
   BookmarkIcon,
@@ -464,6 +464,7 @@ export default function Prototype() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="stream-app">
       <AnimatePresence initial={false} mode="sync" custom={pageDirection}>
       <motion.div
@@ -474,7 +475,7 @@ export default function Prototype() {
         initial="enter"
         animate="center"
         exit="exit"
-        transition={{ type: "tween", duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+        transition={{ type: "spring", visualDuration: 0.35, bounce: 0 }}
       >
       {page === "home" || page === "search" ? <div className="header-scrim" aria-hidden="true" /> : null}
 
@@ -1264,5 +1265,6 @@ export default function Prototype() {
 
       {toast ? <div className="app-toast" role="status">{toast}</div> : null}
     </div>
+    </MotionConfig>
   );
 }

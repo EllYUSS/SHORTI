@@ -17,6 +17,13 @@
   /* Height the simulated status bar occupies inside the phone frame. Full-page
      previews have no simulated status bar, so they shrink this to the real
      safe-area inset instead of leaving the reserve empty. */
+  /* iOS-кривые: отклик начинается резко и мягко оседает. Симметричная `ease`
+     на старте ощущается вялой. */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-ios-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-tap: 200ms;
+  --dur-base: 260ms;
+  --dur-slow: 340ms;
   --app-top-inset: 53px;
   --app-browser-toolbar-clearance: 72px;
   --app-bottom-inset: calc(var(--device-safe-area-bottom, 34px) + var(--app-browser-toolbar-clearance));
@@ -234,7 +241,7 @@ body:has(.full-page-screen),
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
-  height: 38px;
+  height: 44px;
   align-items: center;
   gap: 10px;
   padding: 0 12px;
@@ -322,7 +329,7 @@ body:has(.full-page-screen),
   display: inline-flex;
   align-items: center;
   gap: 1px;
-  height: 32px;
+  height: 44px;
   padding: 0;
   background: transparent;
   color: #a0a0a0 !important;
@@ -648,10 +655,14 @@ body:has(.full-page-screen),
 
 .for-you-progress input {
   position: absolute;
-  inset: 0;
+  /* Трек отрисован отдельным span; этот input — прозрачная зона захвата,
+     поэтому её можно растянуть до 44pt, не меняя внешний вид. */
+  top: 50%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 44px;
   margin: 0;
+  transform: translateY(-50%);
   appearance: none;
   background: transparent;
   cursor: pointer;
@@ -867,7 +878,7 @@ body:has(.full-page-screen),
   border-radius: 17px;
   background: transparent;
   color: #888 !important;
-  transition: color 180ms ease, transform 180ms ease;
+  transition: color var(--dur-base) var(--ease-ios), transform var(--dur-base) var(--ease-ios);
 }
 
 .nav-item::before {
@@ -882,7 +893,7 @@ body:has(.full-page-screen),
   content: "";
   opacity: 0;
   transform: translate(-50%, -50%);
-  transition: opacity 180ms ease, background 180ms ease, border-color 180ms ease;
+  transition: opacity var(--dur-base) var(--ease-ios), background var(--dur-base) var(--ease-ios), border-color var(--dur-base) var(--ease-ios);
 }
 
 .nav-item.is-active {
@@ -965,8 +976,8 @@ body:has(.full-page-screen),
 
 .profile-toolbar-button {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border: 1px solid rgba(194, 165, 231, 0.11) !important;
   border-radius: 13px;
@@ -1583,7 +1594,7 @@ body:has(.full-page-screen),
   border: 1px solid rgba(255, 255, 255, 0.11) !important;
   border-radius: 999px;
   background: #3a3740;
-  transition: background 160ms ease, border-color 160ms ease;
+  transition: background var(--dur-tap) var(--ease-ios), border-color var(--dur-tap) var(--ease-ios);
 }
 
 .privacy-toggle > span {
@@ -1593,7 +1604,7 @@ body:has(.full-page-screen),
   border-radius: 50%;
   background: #f6f4f8;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  transition: transform 160ms ease;
+  transition: transform var(--dur-tap) var(--ease-ios);
 }
 
 .privacy-toggle.is-on {
@@ -2137,7 +2148,7 @@ body:has(.full-page-screen),
 
 .store-plan-action,
 .rewards-primary-action {
-  min-height: 38px;
+  min-height: 44px;
   border: 1px solid rgba(212, 188, 246, 0.26) !important;
   border-radius: 11px;
   background: linear-gradient(135deg, #8955d3, #6738ad);
@@ -2230,7 +2241,7 @@ body:has(.full-page-screen),
 .rewards-tabs button {
   position: relative;
   display: inline-flex;
-  min-height: 41px;
+  min-height: 44px;
   align-items: center;
   gap: 6px;
   padding: 0 5px 9px;
@@ -2546,7 +2557,7 @@ body:has(.full-page-screen),
 
 .coin-history-filter-trigger svg {
   color: #a79aaf;
-  transition: transform 140ms ease;
+  transition: transform var(--dur-tap) var(--ease-ios);
 }
 
 .coin-history-filter-trigger[aria-expanded="true"] svg {
@@ -2570,7 +2581,7 @@ body:has(.full-page-screen),
 
 .coin-history-filter-menu button {
   display: flex;
-  min-height: 37px;
+  min-height: 44px;
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
@@ -2612,7 +2623,7 @@ body:has(.full-page-screen),
 .coin-alert-card > button {
   display: inline-flex;
   min-width: 73px;
-  min-height: 34px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   padding: 0 9px;
@@ -2933,7 +2944,7 @@ body:has(.full-page-screen),
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 5px 15px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(12px) saturate(1.15);
   backdrop-filter: blur(12px) saturate(1.15);
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: transform var(--dur-tap) var(--ease-ios), border-color var(--dur-tap) var(--ease-ios), background var(--dur-tap) var(--ease-ios), box-shadow var(--dur-tap) var(--ease-ios);
 }
 
 .profile-option:active {
@@ -3359,6 +3370,7 @@ body:has(.full-page-screen),
 
 .bookmark-action {
   display: grid;
+  min-height: 44px;
   place-items: center;
   border-radius: 6px;
   background: #272727;
@@ -3380,6 +3392,7 @@ body:has(.full-page-screen),
 
 .continue-button {
   display: flex;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -3715,7 +3728,7 @@ body:has(.full-page-screen),
   box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.5), 0 -2px 24px rgba(109, 66, 184, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.055);
   -webkit-backdrop-filter: blur(24px) saturate(1.25);
   backdrop-filter: blur(24px) saturate(1.25);
-  animation: episodes-sheet-enter 340ms cubic-bezier(0.22, 0.8, 0.25, 1) both;
+  animation: episodes-sheet-enter var(--dur-slow) var(--ease-ios) both;
 }
 
 @keyframes episodes-sheet-enter {
@@ -3862,7 +3875,7 @@ body:has(.full-page-screen),
   font-size: 15px !important;
   font-weight: 550 !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075), 0 3px 9px rgba(0, 0, 0, 0.18);
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: transform var(--dur-tap) var(--ease-ios), border-color var(--dur-tap) var(--ease-ios), background var(--dur-tap) var(--ease-ios), box-shadow var(--dur-tap) var(--ease-ios);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -3991,7 +4004,7 @@ body:has(.full-page-screen),
   font-size: 12px !important;
   font-weight: 600 !important;
   line-height: 1.2;
-  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  transition: background var(--dur-tap) var(--ease-ios), border-color var(--dur-tap) var(--ease-ios), color var(--dur-tap) var(--ease-ios);
 }
 
 .filter-option.is-selected {
@@ -4048,8 +4061,8 @@ body:has(.full-page-screen),
 
 .rating-stars button {
   display: grid;
-  width: 39px;
-  height: 39px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   padding: 0;
   background: transparent;
@@ -4181,4 +4194,64 @@ body:has(.full-page-screen),
   .home-content,
   .search-content { padding-right: 18px; padding-left: 18px; }
   .poster-grid { column-gap: 9px; }
+}
+
+/* Мгновенный отклик на нажатие. В iOS каждый нажимаемый элемент отзывается
+   сразу; без этого интерфейс кажется неотзывчивым на медленной сети. */
+.stream-app button:active:not(:disabled),
+.stream-app [role="button"]:active {
+  opacity: 0.62;
+  transition-duration: 60ms;
+}
+
+.stream-app .poster-card:active:not(:disabled) {
+  opacity: 1;
+  transform: scale(0.972);
+}
+
+.poster-card {
+  transition: transform var(--dur-tap) var(--ease-ios);
+}
+
+/* Требование HIG по доступности: при включённом «Уменьшении движения» в
+   настройках iOS интерфейс не должен скользить и пружинить. */
+@media (prefers-reduced-motion: reduce) {
+  .stream-app,
+  .stream-app * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .stream-app .poster-card:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* HIG разрешает расширять зону нажатия за границы отрисовки. У этих элементов
+   размер — часть дизайна (круглые кнопки поверх артов, крестики, переключатель),
+   поэтому зона растёт невидимым псевдоэлементом, а вид остаётся прежним. */
+.clear-search,
+.filter-button,
+.episodes-sheet-close,
+.round-icon-button,
+.store-balance-heading > button,
+.privacy-toggle {
+  position: relative;
+}
+
+.clear-search::after,
+.filter-button::after,
+.episodes-sheet-close::after,
+.round-icon-button::after,
+.store-balance-heading > button::after,
+.privacy-toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
 }
