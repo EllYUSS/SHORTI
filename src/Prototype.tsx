@@ -258,7 +258,10 @@ export default function Prototype() {
   const [watchProgress, setWatchProgress] = useState(65);
   const [watchSynopsisExpanded, setWatchSynopsisExpanded] = useState(false);
   const [forYouLiked, setForYouLiked] = useState(false);
-  const [forYouProgress, setForYouProgress] = useState(20);
+  const [forYouProgress, setForYouProgress] = useState(0);
+  const [forYouIndex, setForYouIndex] = useState(0);
+  const [forYouPlaying, setForYouPlaying] = useState(true);
+  const [forYouImmersive, setForYouImmersive] = useState(false);
   const [toast, setToast] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [notificationCategory, setNotificationCategory] = useState<"new" | "system">("new");
@@ -335,6 +338,30 @@ export default function Prototype() {
     const interval = window.setInterval(updateTimeLeft, 1000);
     return () => window.clearInterval(interval);
   }, [hourlyRewardReadyAt]);
+
+  /* Лента «Для вас» — только то, у чего есть видео: автопереход привязан к
+     концу воспроизведения, и ролик-постер остановил бы ленту навсегда. Пока
+     видео не добавлено ни одному сериалу, показываем каталог, чтобы экран не
+     остался пустым. */
+  const forYouFeed = useMemo(() => {
+    const withVideo = [forYouShow, ...shows].filter((show) => show.video);
+    return withVideo.length > 0 ? withVideo : [forYouShow, ...shows];
+  }, []);
+  const forYouItem = forYouFeed[forYouIndex] ?? forYouFeed[0];
+
+  const advanceForYou = () => {
+    setForYouIndex((index) => (index + 1) % forYouFeed.length);
+    setForYouProgress(0);
+    setForYouPlaying(true);
+  };
+
+  /* Кнопка в центре — источник правды для воспроизведения ленты. */
+  useEffect(() => {
+    const video = forYouVideoRef.current;
+    if (!video) return;
+    if (forYouPlaying) void video.play().catch(() => setForYouPlaying(false));
+    else video.pause();
+  }, [forYouPlaying, forYouIndex]);
 
   const visibleShows = useMemo(() => {
     let result = [...shows];
@@ -609,78 +636,111 @@ export default function Prototype() {
 
       <MobileScroll className={`stream-scroll ${page === "home" ? "home-scroll" : ""} ${page === "for-you" ? "for-you-scroll" : ""} ${page === "search" ? "search-scroll" : ""} ${page === "library" ? "library-scroll" : ""} ${page === "watch" ? "watch-scroll" : ""} ${page === "notifications" ? "notifications-scroll" : ""}`}>
         {page === "for-you" ? (
-          <main className="for-you-feed" aria-label="Подборка Для вас">
-            {forYouShow.video ? (
-              <video
-                ref={forYouVideoRef}
-                className="for-you-art"
-                src={forYouShow.video}
-                poster={forYouShow.image}
-                playsInline
-                muted
-                loop
-                autoPlay
-                preload="metadata"
-                onTimeUpdate={(event) => {
-                  const video = event.currentTarget;
-                  if (video.duration) setForYouProgress((video.currentTime / video.duration) * 100);
-                }}
-              />
-            ) : (
-              <img className="for-you-art" src={forYouShow.image} alt="Принцесса в серебряном платье в лунном дворце" draggable={false} />
-            )}
-            <div className="for-you-scrim" aria-hidden="true" />
-            <button className="for-you-search" type="button" aria-label="Поиск" onClick={() => navigate("search")}><SearchTabIcon active /></button>
-            <button className="for-you-play" type="button" aria-label="Смотреть трейлер" onClick={() => startWatching(forYouShow)}><PlayOutlineIcon /></button>
+          <main className={`for-you-feed ${forYouImmersive ? "is-immersive" : ""}`} aria-label="Подборка Для вас">
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div
+                key={forYouIndex}
+                className="for-you-item"
+                initial={{ y: "100%" }}
+                animate={{ y: "0%" }}
+                exit={{ y: "-100%" }}
+                transition={{ type: "spring", visualDuration: 0.42, bounce: 0 }}
+              >
+                {forYouItem.video ? (
+                  <video
+                    ref={forYouVideoRef}
+                    className="for-you-art"
+                    src={forYouItem.video}
+                    poster={forYouItem.image}
+                    playsInline
+                    muted
+                    autoPlay
+                    preload="metadata"
+                    onTimeUpdate={(event) => {
+                      const video = event.currentTarget;
+                      if (video.duration) setForYouProgress((video.currentTime / video.duration) * 100);
+                    }}
+                    onEnded={advanceForYou}
+                  />
+                ) : (
+                  <img className="for-you-art" src={forYouItem.image} alt="" draggable={false} />
+                )}
+                <div className="for-you-scrim" aria-hidden="true" />
 
-            <div className="for-you-actions" aria-label="Действия с сериалом">
-              <button className={`for-you-action ${savedIds.includes(forYouShow.id) ? "is-saved" : ""}`} type="button" aria-label={savedIds.includes(forYouShow.id) ? "Убрать из избранного" : "Добавить в избранное"} aria-pressed={savedIds.includes(forYouShow.id)} onClick={() => toggleSaved(forYouShow)}>
-                <svg className="for-you-outline-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                  <path fill={savedIds.includes(forYouShow.id) ? "currentColor" : "none"} d="M6.15 3.8h11.7a1.5 1.5 0 0 1 1.5 1.5v14.45L12 15.05l-7.35 4.7V5.3a1.5 1.5 0 0 1 1.5-1.5Z" />
-                </svg>
-                <span>3,5 тыс.</span>
-              </button>
-              <button className={`for-you-action ${forYouLiked ? "is-liked" : ""}`} type="button" aria-label={forYouLiked ? "Убрать отметку нравится" : "Нравится"} aria-pressed={forYouLiked} onClick={() => setForYouLiked((liked) => !liked)}>
-                <svg className="for-you-outline-icon for-you-heart-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                  <path fill={forYouLiked ? "currentColor" : "none"} d="M12 19.15 4.25 11.7a4.9 4.9 0 0 1 6.95-6.9L12 5.6l.8-.8a4.9 4.9 0 0 1 6.95 6.9L12 19.15Z" />
-                </svg>
-                <span>{forYouLiked ? "630" : "629"}</span>
-              </button>
-              <button className="for-you-action for-you-share-action" type="button" aria-label="Поделиться сериалом" onClick={() => void shareShow(forYouShow)}>
-                <svg className="for-you-share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                  <path d="M5.05 4.6h13.4a3 3 0 0 1 2.45 4.72l-6.82 10.02a2.75 2.75 0 0 1-4.9-1.04L8 12.85 3.65 9.4a3 3 0 0 1 1.4-4.8Z" />
-                  <path d="m8 12.85 7.2-4.4" />
-                </svg>
-              </button>
-            </div>
+                {/* Нажатие по кадру убирает и возвращает элементы поверх видео. */}
+                <button
+                  className="for-you-stage"
+                  type="button"
+                  aria-label={forYouImmersive ? "Показать элементы управления" : "Скрыть элементы управления"}
+                  aria-pressed={forYouImmersive}
+                  onClick={() => setForYouImmersive((hidden) => !hidden)}
+                />
 
-            <section className="for-you-caption">
-              <span className="for-you-badge"><StarIcon width={14} height={14} /> Новинки № 7</span>
-              <button className="for-you-title" type="button" onClick={() => openDetail(forYouShow)}>
-                <span>{forYouShow.title}</span><ChevronRightIcon width={19} height={19} />
-              </button>
-              <p className="for-you-summary"><span>Хрупкая принцесса оборотней скрывает тайну.</span><button type="button" onClick={() => openDetail(forYouShow)}>Подробнее</button></p>
-              <span className="for-you-genre">{forYouShow.genre}</span>
-            </section>
+                <button
+                  className="for-you-play"
+                  type="button"
+                  aria-label={forYouPlaying ? "Пауза" : "Воспроизвести"}
+                  onClick={() => setForYouPlaying((playing) => !playing)}
+                >
+                  {forYouPlaying ? (
+                    <svg className="player-pause-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                      <path d="M8 6.25v11.5M16 6.25v11.5" />
+                    </svg>
+                  ) : (
+                    <PlayOutlineIcon />
+                  )}
+                </button>
 
-            <div className="for-you-progress">
-              <span className="for-you-progress-track" aria-hidden="true"><span style={{ width: `${forYouProgress}%` }} /></span>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={forYouProgress}
-                aria-label="Позиция в ролике"
-                onChange={(event) => {
-                  const percent = Number(event.currentTarget.value);
-                  setForYouProgress(percent);
-                  const video = forYouVideoRef.current;
-                  if (video?.duration) video.currentTime = (percent / 100) * video.duration;
-                }}
-              />
-            </div>
+                <div className="for-you-actions" aria-label="Действия с сериалом">
+                  <button className={`for-you-action ${savedIds.includes(forYouItem.id) ? "is-saved" : ""}`} type="button" aria-label={savedIds.includes(forYouItem.id) ? "Убрать из избранного" : "Добавить в избранное"} aria-pressed={savedIds.includes(forYouItem.id)} onClick={() => toggleSaved(forYouItem)}>
+                    <svg className="for-you-outline-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                      <path fill={savedIds.includes(forYouItem.id) ? "currentColor" : "none"} d="M6.15 3.8h11.7a1.5 1.5 0 0 1 1.5 1.5v14.45L12 15.05l-7.35 4.7V5.3a1.5 1.5 0 0 1 1.5-1.5Z" />
+                    </svg>
+                    <span>{forYouItem.views}</span>
+                  </button>
+                  <button className={`for-you-action ${forYouLiked ? "is-liked" : ""}`} type="button" aria-label={forYouLiked ? "Убрать отметку нравится" : "Нравится"} aria-pressed={forYouLiked} onClick={() => setForYouLiked((liked) => !liked)}>
+                    <svg className="for-you-outline-icon for-you-heart-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                      <path fill={forYouLiked ? "currentColor" : "none"} d="M12 19.15 4.25 11.7a4.9 4.9 0 0 1 6.95-6.9L12 5.6l.8-.8a4.9 4.9 0 0 1 6.95 6.9L12 19.15Z" />
+                    </svg>
+                    <span>{forYouLiked ? "630" : "629"}</span>
+                  </button>
+                  <button className="for-you-action for-you-share-action" type="button" aria-label="Поделиться сериалом" onClick={() => void shareShow(forYouItem)}>
+                    <svg className="for-you-share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                      <path d="M5.05 4.6h13.4a3 3 0 0 1 2.45 4.72l-6.82 10.02a2.75 2.75 0 0 1-4.9-1.04L8 12.85 3.65 9.4a3 3 0 0 1 1.4-4.8Z" />
+                      <path d="m8 12.85 7.2-4.4" />
+                    </svg>
+                  </button>
+                </div>
 
-            <button className="for-you-watch" type="button" onClick={() => startWatching(forYouShow)}><PlayOutlineIcon size={17} /> Смотреть сейчас</button>
+                <section className="for-you-caption">
+                  {forYouItem.badge ? <span className="for-you-badge"><StarIcon width={14} height={14} /> {forYouItem.badge}</span> : null}
+                  <button className="for-you-title" type="button" onClick={() => openDetail(forYouItem)}>
+                    <span>{forYouItem.title}</span><ChevronRightIcon width={19} height={19} />
+                  </button>
+                  <p className="for-you-summary"><span>{forYouItem.summary}</span><button type="button" onClick={() => openDetail(forYouItem)}>Подробнее</button></p>
+                  <span className="for-you-genre">{forYouItem.genre}</span>
+                </section>
+
+                <div className="for-you-progress">
+                  <span className="for-you-progress-track" aria-hidden="true"><span style={{ width: `${forYouProgress}%` }} /></span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={forYouProgress}
+                    aria-label="Позиция в ролике"
+                    onChange={(event) => {
+                      const percent = Number(event.currentTarget.value);
+                      setForYouProgress(percent);
+                      const video = forYouVideoRef.current;
+                      if (video?.duration) video.currentTime = (percent / 100) * video.duration;
+                    }}
+                  />
+                </div>
+
+                <button className="for-you-watch" type="button" onClick={() => startWatching(forYouItem)}><PlayOutlineIcon size={17} /> Смотреть сейчас</button>
+              </motion.div>
+            </AnimatePresence>
           </main>
         ) : null}
 

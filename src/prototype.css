@@ -4255,3 +4255,48 @@ body:has(.full-page-screen),
   height: max(100%, 44px);
   transform: translate(-50%, -50%);
 }
+
+/* Лента «Для вас»: ролик занимает весь кадр и уезжает вверх по окончании. */
+.for-you-item {
+  position: absolute;
+  inset: 0;
+}
+
+/* Прозрачный слой между видео и элементами управления: ловит нажатие по кадру,
+   не перехватывая нажатия по самим кнопкам. */
+.for-you-stage {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.for-you-feed .for-you-play,
+.for-you-feed .for-you-actions,
+.for-you-feed .for-you-caption,
+.for-you-feed .for-you-progress,
+.for-you-feed .for-you-watch,
+.for-you-feed .for-you-scrim {
+  transition: opacity var(--dur-base) var(--ease-ios);
+}
+
+/* Нажатие по кадру оставляет только видео и нижнее меню. */
+.for-you-feed.is-immersive .for-you-play,
+.for-you-feed.is-immersive .for-you-actions,
+.for-you-feed.is-immersive .for-you-caption,
+.for-you-feed.is-immersive .for-you-progress,
+.for-you-feed.is-immersive .for-you-watch,
+.for-you-feed.is-immersive .for-you-scrim {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.for-you-play .player-pause-icon {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
