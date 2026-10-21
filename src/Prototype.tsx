@@ -102,10 +102,42 @@ function PlayOutlineIcon({ size = 26 }: { size?: number }) {
 }
 
 function PosterCard({ show, onOpen }: { show: Show; onOpen: () => void }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  /* Старт даёт autoPlay, а наблюдатель только снимает с паузы ушедшие за край:
+     иначе лента из нескольких видео параллельно съедает батарею и кадры. На сам
+     запуск он не завязан — колбэк зависит от отрисовки и может не сработать. */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) void video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [show.video]);
+
   return (
     <button className="poster-card" type="button" onClick={onOpen} aria-label={`Открыть сериал «${show.title}»`}>
       <span className="poster-art">
-        <img src={show.image} alt="" draggable={false} />
+        {show.video ? (
+          <video
+            ref={videoRef}
+            src={show.video}
+            poster={show.image}
+            playsInline
+            muted
+            loop
+            autoPlay
+            preload="metadata"
+          />
+        ) : (
+          <img src={show.image} alt="" draggable={false} />
+        )}
         {show.badge ? <span className={`poster-badge ${show.badge === "Хит" ? "is-hot" : ""}`}>{show.badge}</span> : null}
         <span className="poster-views">
           <svg aria-hidden="true" viewBox="0 0 24 24">

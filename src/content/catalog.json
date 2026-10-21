@@ -41,7 +41,8 @@
         "role": "Джун",
         "image": "/assets/posters/secret-heir.webp"
       }
-    ]
+    ],
+    "video": "/assets/video/trailer.mp4"
   },
   "shows": [
     {
@@ -72,7 +73,8 @@
           "image": "/assets/posters/billionaire-contract.webp"
         }
       ],
-      "isNew": true
+      "isNew": true,
+      "video": "/assets/video/trailer.mp4"
     },
     {
       "id": "secret-heir",

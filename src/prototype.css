@@ -767,7 +767,8 @@ body:has(.full-page-screen),
   pointer-events: none;
 }
 
-.poster-art img {
+.poster-art img,
+.poster-art video {
   display: block;
   width: 100%;
   height: 100%;
