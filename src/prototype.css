@@ -419,12 +419,12 @@ body:has(.full-page-screen),
   position: absolute;
   z-index: 2;
   right: 10px;
-  bottom: calc(var(--app-bottom-inset) + 248px);
+  bottom: calc(var(--app-bottom-inset) + 220px);
   display: flex;
   width: 56px;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 17.6px;
 }
 
 .for-you-action {
