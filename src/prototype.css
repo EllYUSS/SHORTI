@@ -183,7 +183,7 @@ body:has(.full-page-screen),
   top: 0;
   right: 0;
   left: 0;
-  height: calc(var(--app-top-inset) + 44px);
+  height: calc(var(--app-top-inset) + 52px);
   padding: calc(var(--app-top-inset) + 4px) 12px 0;
   background: transparent;
 }
@@ -222,7 +222,7 @@ body:has(.full-page-screen),
 .home-brand-row {
   display: flex;
   align-items: center;
-  height: 35px;
+  height: 44px;
 }
 
 .brand-mark {
@@ -315,7 +315,7 @@ body:has(.full-page-screen),
   top: calc(var(--app-top-inset) + 4px);
   right: 15px;
   left: 58px;
-  height: 35px;
+  height: 44px;
 }
 
 .category-track {
@@ -350,7 +350,7 @@ body:has(.full-page-screen),
   top: 0;
   right: 0;
   left: 0;
-  height: calc(var(--app-top-inset) + 40px);
+  height: calc(var(--app-top-inset) + 52px);
   padding: calc(var(--app-top-inset) + 4px) 15px 0;
   background: transparent;
 }
@@ -727,7 +727,7 @@ body:has(.full-page-screen),
 
 .section-heading > span {
   color: #777;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .poster-grid {
@@ -785,7 +785,7 @@ body:has(.full-page-screen),
   border-radius: 0 4px 4px 0;
   background: #ed3536;
   color: #fff;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1.2;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22);
@@ -804,7 +804,7 @@ body:has(.full-page-screen),
   align-items: center;
   gap: 2px;
   color: white;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   text-shadow: 0 1px 3px #000;
 }
@@ -1078,7 +1078,7 @@ body:has(.full-page-screen),
   padding: 7px 0 7px 5px;
   background: transparent;
   color: #c2a6ef !important;
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 600 !important;
   white-space: nowrap;
 }
@@ -1866,7 +1866,7 @@ body:has(.full-page-screen),
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.045);
   color: #aaa3b1;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -2018,7 +2018,7 @@ body:has(.full-page-screen),
 
 .store-section-heading > span {
   color: #8f8898;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .store-plan-list {
@@ -2055,7 +2055,7 @@ body:has(.full-page-screen),
   border-radius: 0 0 0 12px;
   background: linear-gradient(110deg, #9f71e2, #7444bf);
   color: #fff;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 750;
 }
 
@@ -2086,7 +2086,7 @@ body:has(.full-page-screen),
 .store-plan-copy p {
   margin-top: 6px;
   color: #aca4b5;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.35;
 }
 
@@ -2106,7 +2106,7 @@ body:has(.full-page-screen),
 
 .store-plan-price s {
   color: #928999;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .store-plan-benefits {
@@ -2123,7 +2123,7 @@ body:has(.full-page-screen),
   align-items: center;
   gap: 6px;
   color: #ded7e8;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.25;
 }
 
@@ -2142,7 +2142,7 @@ body:has(.full-page-screen),
   border-radius: 5px;
   background: rgba(152, 111, 204, 0.19);
   color: #e0d3f0;
-  font-size: 7px;
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -2221,7 +2221,7 @@ body:has(.full-page-screen),
   margin: 0;
   padding-left: 18px;
   color: #8f8995;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -2351,7 +2351,7 @@ body:has(.full-page-screen),
 .daily-reward-heading p {
   margin-top: 3px;
   color: #98919f;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .daily-reward-days {
@@ -2382,7 +2382,7 @@ body:has(.full-page-screen),
 .daily-reward-days small,
 .daily-reward-days i {
   color: #908997;
-  font-size: 8px;
+  font-size: 11px;
   font-style: normal;
 }
 
@@ -2457,7 +2457,7 @@ body:has(.full-page-screen),
 
 .rewards-bonus-card p {
   color: #98919f;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .rewards-bonus-card > svg {
@@ -2615,7 +2615,7 @@ body:has(.full-page-screen),
 
 .coin-alert-card > strong {
   color: #ddd6e4;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 550;
   line-height: 1.35;
 }
@@ -2631,7 +2631,7 @@ body:has(.full-page-screen),
   border-radius: 9px;
   background: linear-gradient(135deg, #8955d3, #6738ad);
   color: #fff !important;
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 650 !important;
 }
 
@@ -2685,7 +2685,7 @@ body:has(.full-page-screen),
 .coin-history-row time,
 .transaction-history-row time {
   color: #8f8995;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .coin-history-row > span {
@@ -3021,7 +3021,7 @@ body:has(.full-page-screen),
 
 .library-heading > span {
   color: #999;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .history-carousel {
@@ -3093,7 +3093,7 @@ body:has(.full-page-screen),
 .episode-progress {
   margin-top: 2px;
   color: #f4f4f4;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -3123,7 +3123,7 @@ body:has(.full-page-screen),
   bottom: 0;
   left: 0;
   color: #f2f2f2;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .remove-saved {
@@ -3330,7 +3330,7 @@ body:has(.full-page-screen),
 .cast-role {
   margin-top: 1px;
   color: #777;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .related-section {
@@ -3585,7 +3585,7 @@ body:has(.full-page-screen),
   border-radius: 7px;
   background: rgba(35, 35, 39, 0.66);
   color: #f0f0f0;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
