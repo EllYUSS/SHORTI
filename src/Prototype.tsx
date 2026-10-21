@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { useDrag } from "@use-gesture/react";
 import {
   ArrowLeftIcon,
   BookmarkIcon,
@@ -31,6 +32,11 @@ import {
 
 const categoryTabs = ["HOT", "NEW", "RANKING"];
 const mainTabOrder: Record<MainTab, number> = { home: 0, "for-you": 1, search: 2, profile: 3 };
+const feedSlideVariants = {
+  enter: (direction: number) => ({ y: direction > 0 ? "100%" : "-100%" }),
+  center: { y: "0%" },
+  exit: (direction: number) => ({ y: direction > 0 ? "-100%" : "100%" }),
+};
 const pageSlideVariants = {
   enter: (direction: number) => ({ x: `${direction * 100}%` }),
   center: { x: "0%" },
@@ -262,6 +268,8 @@ export default function Prototype() {
   const [forYouIndex, setForYouIndex] = useState(0);
   const [forYouPlaying, setForYouPlaying] = useState(true);
   const [forYouImmersive, setForYouImmersive] = useState(false);
+  const [forYouMuted, setForYouMuted] = useState(false);
+  const [forYouDirection, setForYouDirection] = useState(1);
   const [toast, setToast] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [notificationCategory, setNotificationCategory] = useState<"new" | "system">("new");
@@ -349,19 +357,52 @@ export default function Prototype() {
   }, []);
   const forYouItem = forYouFeed[forYouIndex] ?? forYouFeed[0];
 
-  const advanceForYou = () => {
-    setForYouIndex((index) => (index + 1) % forYouFeed.length);
+  const goToForYou = (step: number) => {
+    setForYouDirection(step);
+    setForYouIndex((index) => (index + step + forYouFeed.length) % forYouFeed.length);
     setForYouProgress(0);
     setForYouPlaying(true);
   };
 
-  /* Кнопка в центре — источник правды для воспроизведения ленты. */
+  const advanceForYou = () => goToForYou(1);
+
+  /* Лента владеет вертикальным жестом сама: короткий или быстрый свайп
+     переключает ролик, не дожидаясь конца воспроизведения. Разметка помечена
+     data-scroll-drag="ignore", иначе перетаскивание забрал бы MobileScroll. */
+  const bindForYouSwipe = useDrag(
+    ({ last, movement: [, moveY], velocity: [, velocityY], direction: [, directionY] }) => {
+      if (!last) return;
+      const farEnough = Math.abs(moveY) > 80;
+      const fastEnough = velocityY > 0.35;
+      if (!farEnough && !fastEnough) return;
+      if (directionY === 0) return;
+      goToForYou(directionY < 0 ? 1 : -1);
+    },
+    { axis: "y", filterTaps: true },
+  );
+
+  /* Кнопка в центре — источник правды для воспроизведения ленты. iOS запрещает
+     автозапуск со звуком, но разрешает его после действия пользователя. Поэтому
+     сначала пробуем со звуком и только при отказе браузера уходим в беззвучный
+     режим — иначе лента молчала бы даже там, где звук разрешён. */
   useEffect(() => {
     const video = forYouVideoRef.current;
     if (!video) return;
-    if (forYouPlaying) void video.play().catch(() => setForYouPlaying(false));
-    else video.pause();
-  }, [forYouPlaying, forYouIndex]);
+    video.muted = forYouMuted;
+    if (!forYouPlaying) {
+      video.pause();
+      return;
+    }
+    void video.play().catch(() => {
+      if (video.muted) {
+        setForYouPlaying(false);
+        return;
+      }
+      video.muted = true;
+      setForYouMuted(true);
+      void video.play().catch(() => setForYouPlaying(false));
+    });
+  }, [forYouPlaying, forYouMuted, forYouIndex]);
 
   const visibleShows = useMemo(() => {
     let result = [...shows];
@@ -637,25 +678,31 @@ export default function Prototype() {
       <MobileScroll className={`stream-scroll ${page === "home" ? "home-scroll" : ""} ${page === "for-you" ? "for-you-scroll" : ""} ${page === "search" ? "search-scroll" : ""} ${page === "library" ? "library-scroll" : ""} ${page === "watch" ? "watch-scroll" : ""} ${page === "notifications" ? "notifications-scroll" : ""}`}>
         {page === "for-you" ? (
           <main className={`for-you-feed ${forYouImmersive ? "is-immersive" : ""}`} aria-label="Подборка Для вас">
-            <AnimatePresence initial={false} mode="popLayout">
+            {/* Уезжает только кадр: элементы управления вынесены за пределы
+                анимируемого слоя и остаются на месте. */}
+            <AnimatePresence initial={false} mode="popLayout" custom={forYouDirection}>
               <motion.div
                 key={forYouIndex}
-                className="for-you-item"
-                initial={{ y: "100%" }}
-                animate={{ y: "0%" }}
-                exit={{ y: "-100%" }}
+                className="for-you-media"
+                custom={forYouDirection}
+                variants={feedSlideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
                 transition={{ type: "spring", visualDuration: 0.42, bounce: 0 }}
               >
                 {forYouItem.video ? (
                   <video
-                    ref={forYouVideoRef}
+                    ref={(element) => {
+                      /* Только присваиваем: на размонтировании старого ролика
+                         React передаёт null и затёр бы ссылку на новый. */
+                      if (element) forYouVideoRef.current = element;
+                    }}
                     className="for-you-art"
                     src={forYouItem.video}
-                    poster={forYouItem.image}
                     playsInline
-                    muted
                     autoPlay
-                    preload="metadata"
+                    preload="auto"
                     onTimeUpdate={(event) => {
                       const video = event.currentTarget;
                       if (video.duration) setForYouProgress((video.currentTime / video.duration) * 100);
@@ -665,10 +712,15 @@ export default function Prototype() {
                 ) : (
                   <img className="for-you-art" src={forYouItem.image} alt="" draggable={false} />
                 )}
-                <div className="for-you-scrim" aria-hidden="true" />
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="for-you-scrim" aria-hidden="true" />
 
                 {/* Нажатие по кадру убирает и возвращает элементы поверх видео. */}
                 <button
+                  {...bindForYouSwipe()}
+                  data-scroll-drag="ignore"
                   className="for-you-stage"
                   type="button"
                   aria-label={forYouImmersive ? "Показать элементы управления" : "Скрыть элементы управления"}
@@ -704,6 +756,22 @@ export default function Prototype() {
                     </svg>
                     <span>{forYouLiked ? "630" : "629"}</span>
                   </button>
+                  <button
+                    className={`for-you-action ${forYouMuted ? "is-muted" : ""}`}
+                    type="button"
+                    aria-label={forYouMuted ? "Включить звук" : "Выключить звук"}
+                    aria-pressed={!forYouMuted}
+                    onClick={() => setForYouMuted((muted) => !muted)}
+                  >
+                    <svg className="for-you-outline-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                      <path d="M11 4.8 6.6 8.4H3.6v7.2h3L11 19.2V4.8Z" fill="currentColor" />
+                      {forYouMuted ? (
+                        <path d="m15.4 9.6 5 4.8m0-4.8-5 4.8" />
+                      ) : (
+                        <path d="M15.2 9a4.2 4.2 0 0 1 0 6M18 6.4a8 8 0 0 1 0 11.2" />
+                      )}
+                    </svg>
+                  </button>
                   <button className="for-you-action for-you-share-action" type="button" aria-label="Поделиться сериалом" onClick={() => void shareShow(forYouItem)}>
                     <svg className="for-you-share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
                       <path d="M5.05 4.6h13.4a3 3 0 0 1 2.45 4.72l-6.82 10.02a2.75 2.75 0 0 1-4.9-1.04L8 12.85 3.65 9.4a3 3 0 0 1 1.4-4.8Z" />
@@ -738,9 +806,7 @@ export default function Prototype() {
                   />
                 </div>
 
-                <button className="for-you-watch" type="button" onClick={() => startWatching(forYouItem)}><PlayOutlineIcon size={17} /> Смотреть сейчас</button>
-              </motion.div>
-            </AnimatePresence>
+            <button className="for-you-watch" type="button" onClick={() => startWatching(forYouItem)}><PlayOutlineIcon size={17} /> Смотреть сейчас</button>
           </main>
         ) : null}
 
@@ -1228,9 +1294,8 @@ export default function Prototype() {
                 ref={watchVideoRef}
                 className="watch-art"
                 src={selectedShow.video}
-                poster={selectedShow.image}
                 playsInline
-                preload="metadata"
+                preload="auto"
                 onTimeUpdate={(event) => {
                   const video = event.currentTarget;
                   if (video.duration) setWatchProgress((video.currentTime / video.duration) * 100);
