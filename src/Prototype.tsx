@@ -761,6 +761,7 @@ export default function Prototype() {
                       <path d="M5.05 4.6h13.4a3 3 0 0 1 2.45 4.72l-6.82 10.02a2.75 2.75 0 0 1-4.9-1.04L8 12.85 3.65 9.4a3 3 0 0 1 1.4-4.8Z" />
                       <path d="m8 12.85 7.2-4.4" />
                     </svg>
+                    <span>148</span>
                   </button>
                 </div>
 
