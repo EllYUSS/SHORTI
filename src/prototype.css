@@ -3463,24 +3463,25 @@ body:has(.full-page-screen),
   right: 9px;
   bottom: calc(var(--app-bottom-inset) + 136px);
   display: flex;
-  width: 58px;
+  width: 56px;
   flex-direction: column;
   align-items: center;
-  gap: 17px;
+  gap: 21px;
 }
 
 .watch-action {
   display: flex;
-  width: 58px;
-  min-height: 47px;
+  width: 56px;
+  /* Высота фиксирована, чтобы кнопка без подписи не выбивалась из строя. */
+  min-height: 51px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 5px;
   padding: 0;
   background: transparent;
   color: #fff !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   text-align: center;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
@@ -3493,19 +3494,19 @@ body:has(.full-page-screen),
 }
 
 .watch-action > .for-you-outline-icon {
-  width: 31.2px;
-  height: 31.2px;
+  width: 30px;
+  height: 30px;
   overflow: visible;
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .watch-action > .for-you-heart-icon {
-  width: 31.2px;
-  height: 31.2px;
-  stroke-width: 2;
+  width: 30px;
+  height: 30px;
+  stroke-width: 1.6;
 }
 
 .watch-action.is-liked,
@@ -3515,11 +3516,11 @@ body:has(.full-page-screen),
 
 .watch-more-action > .for-you-share-icon {
   display: block;
-  width: 31.2px;
-  height: 31.2px;
+  width: 30px;
+  height: 30px;
   overflow: visible;
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));

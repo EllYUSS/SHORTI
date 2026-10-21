@@ -1323,13 +1323,13 @@ export default function Prototype() {
                 <svg className="for-you-outline-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
                   <path fill={isSaved ? "currentColor" : "none"} d="M6.15 3.8h11.7a1.5 1.5 0 0 1 1.5 1.5v14.45L12 15.05l-7.35 4.7V5.3a1.5 1.5 0 0 1 1.5-1.5Z" />
                 </svg>
-                <span>{isSaved ? "В списке" : "238,1 тыс."}</span>
+                <span>{isSaved ? "В списке" : "238,1 т"}</span>
               </button>
               <button className={`watch-action ${watchLiked ? "is-liked" : ""}`} type="button" aria-label={watchLiked ? "Убрать отметку нравится" : "Нравится"} aria-pressed={watchLiked} onClick={() => setWatchLiked((liked) => !liked)}>
                 <svg className="for-you-outline-icon for-you-heart-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
                   <path fill={watchLiked ? "currentColor" : "none"} d="M12 19.15 4.25 11.7a4.9 4.9 0 0 1 6.95-6.9L12 5.6l.8-.8a4.9 4.9 0 0 1 6.95 6.9L12 19.15Z" />
                 </svg>
-                <span>{watchLiked ? "1,9 тыс." : "1,8 тыс."}</span>
+                <span>{watchLiked ? "1,9 т" : "1,8 т"}</span>
               </button>
               <button className="watch-action watch-more-action" type="button" aria-expanded={watchSynopsisExpanded} aria-label={watchSynopsisExpanded ? "Свернуть описание" : "Подробнее о сериале"} onClick={() => setWatchSynopsisExpanded((expanded) => !expanded)}>
                 <svg className="for-you-share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
