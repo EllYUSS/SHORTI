@@ -278,6 +278,19 @@ export default function Prototype() {
 
   /* iOS всегда возвращает список туда, где его оставили. Позиция пишется на
      каждый скролл и восстанавливается, когда экран снова становится текущим. */
+  const watchVideoRef = useRef<HTMLVideoElement | null>(null);
+  const forYouVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  /* Кнопка play/pause — единственный источник правды для плеера. iOS не даёт
+     запускать звук без жеста пользователя, поэтому play() вызывается только по
+     нажатию и его отказ не ломает состояние. */
+  useEffect(() => {
+    const video = watchVideoRef.current;
+    if (!video) return;
+    if (playing) void video.play().catch(() => setPlaying(false));
+    else video.pause();
+  }, [playing, currentEpisode, selectedShow.id]);
+
   const scrollMemory = useRef<Record<string, number>>({});
 
   useEffect(() => {
@@ -597,7 +610,25 @@ export default function Prototype() {
       <MobileScroll className={`stream-scroll ${page === "home" ? "home-scroll" : ""} ${page === "for-you" ? "for-you-scroll" : ""} ${page === "search" ? "search-scroll" : ""} ${page === "library" ? "library-scroll" : ""} ${page === "watch" ? "watch-scroll" : ""} ${page === "notifications" ? "notifications-scroll" : ""}`}>
         {page === "for-you" ? (
           <main className="for-you-feed" aria-label="Подборка Для вас">
-            <img className="for-you-art" src={forYouShow.image} alt="Принцесса в серебряном платье в лунном дворце" draggable={false} />
+            {forYouShow.video ? (
+              <video
+                ref={forYouVideoRef}
+                className="for-you-art"
+                src={forYouShow.video}
+                poster={forYouShow.image}
+                playsInline
+                muted
+                loop
+                autoPlay
+                preload="metadata"
+                onTimeUpdate={(event) => {
+                  const video = event.currentTarget;
+                  if (video.duration) setForYouProgress((video.currentTime / video.duration) * 100);
+                }}
+              />
+            ) : (
+              <img className="for-you-art" src={forYouShow.image} alt="Принцесса в серебряном платье в лунном дворце" draggable={false} />
+            )}
             <div className="for-you-scrim" aria-hidden="true" />
             <button className="for-you-search" type="button" aria-label="Поиск" onClick={() => navigate("search")}><SearchTabIcon active /></button>
             <button className="for-you-play" type="button" aria-label="Смотреть трейлер" onClick={() => startWatching(forYouShow)}><PlayOutlineIcon /></button>
@@ -640,7 +671,12 @@ export default function Prototype() {
                 max="100"
                 value={forYouProgress}
                 aria-label="Позиция в ролике"
-                onChange={(event) => setForYouProgress(Number(event.target.value))}
+                onChange={(event) => {
+                  const percent = Number(event.currentTarget.value);
+                  setForYouProgress(percent);
+                  const video = forYouVideoRef.current;
+                  if (video?.duration) video.currentTime = (percent / 100) * video.duration;
+                }}
               />
             </div>
 
@@ -1127,7 +1163,23 @@ export default function Prototype() {
 
         {page === "watch" ? (
           <main className="watch-content" aria-label={`Просмотр сериала «${selectedShow.title}»`}>
-            <img className="watch-art" src={selectedShow.image} alt="" draggable={false} />
+            {selectedShow.video ? (
+              <video
+                ref={watchVideoRef}
+                className="watch-art"
+                src={selectedShow.video}
+                poster={selectedShow.image}
+                playsInline
+                preload="metadata"
+                onTimeUpdate={(event) => {
+                  const video = event.currentTarget;
+                  if (video.duration) setWatchProgress((video.currentTime / video.duration) * 100);
+                }}
+                onEnded={() => setPlaying(false)}
+              />
+            ) : (
+              <img className="watch-art" src={selectedShow.image} alt="" draggable={false} />
+            )}
             <div className="watch-scrim" aria-hidden="true" />
 
             <button className="player-toggle" type="button" aria-label={playing ? "Поставить на паузу" : "Воспроизвести"} onClick={() => setPlaying((value) => !value)}>
@@ -1170,7 +1222,19 @@ export default function Prototype() {
 
             <div className="watch-progress">
               <span className="watch-progress-track" aria-hidden="true"><i style={{ width: `${watchProgress}%` }} /></span>
-              <input type="range" min="0" max="100" value={watchProgress} aria-label="Позиция серии" onChange={(event) => setWatchProgress(Number(event.currentTarget.value))} />
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={watchProgress}
+                aria-label="Позиция серии"
+                onChange={(event) => {
+                  const percent = Number(event.currentTarget.value);
+                  setWatchProgress(percent);
+                  const video = watchVideoRef.current;
+                  if (video?.duration) video.currentTime = (percent / 100) * video.duration;
+                }}
+              />
             </div>
 
             <button className="watch-episode-trigger" type="button" aria-expanded={episodeSheetOpen} onClick={openEpisodeSheet}>
