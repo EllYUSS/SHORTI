@@ -395,20 +395,6 @@ body:has(.full-page-screen),
   pointer-events: none;
 }
 
-.for-you-search {
-  position: absolute;
-  z-index: 2;
-  top: calc(var(--app-top-inset) + 2px);
-  right: 15px;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  padding: 0;
-  background: transparent;
-  color: #fff;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.55));
-}
 
 .for-you-play {
   position: absolute;
