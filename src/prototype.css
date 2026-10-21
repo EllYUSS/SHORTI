@@ -424,7 +424,7 @@ body:has(.full-page-screen),
   width: 56px;
   flex-direction: column;
   align-items: center;
-  gap: 17.6px;
+  gap: 18px;
 }
 
 .for-you-action {
