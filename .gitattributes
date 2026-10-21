@@ -1,0 +1,11 @@
+# The runtime integrity check hashes these files byte for byte. Git on Windows
+# rewrites line endings on checkout by default, which changes every hash and
+# makes `npm run check:runtime` fail before the app can start. Pin LF everywhere.
+* text=auto eol=lf
+
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.woff -text
+*.woff2 -text
+*.ico -text
