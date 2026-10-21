@@ -763,7 +763,7 @@ export default function Prototype() {
                     aria-pressed={!forYouMuted}
                     onClick={() => setForYouMuted((muted) => !muted)}
                   >
-                    <svg className="for-you-outline-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <svg className="for-you-outline-icon for-you-sound-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
                       <path d="M11 4.8 6.6 8.4H3.6v7.2h3L11 19.2V4.8Z" fill="currentColor" />
                       {forYouMuted ? (
                         <path d="m15.4 9.6 5 4.8m0-4.8-5 4.8" />
@@ -783,9 +783,11 @@ export default function Prototype() {
                 <section className="for-you-caption">
                   {forYouItem.badge ? <span className="for-you-badge"><StarIcon width={14} height={14} /> {forYouItem.badge}</span> : null}
                   <button className="for-you-title" type="button" onClick={() => openDetail(forYouItem)}>
-                    <span>{forYouItem.title}</span><ChevronRightIcon width={19} height={19} />
+                    <span>{forYouItem.title}</span>
                   </button>
-                  <p className="for-you-summary"><span>{forYouItem.summary}</span><button type="button" onClick={() => openDetail(forYouItem)}>Подробнее</button></p>
+                  <button className="for-you-summary" type="button" onClick={() => openDetail(forYouItem)}>
+                    <span>{forYouItem.summary}</span><ChevronRightIcon width={17} height={17} />
+                  </button>
                   <span className="for-you-genre">{forYouItem.genre}</span>
                 </section>
 

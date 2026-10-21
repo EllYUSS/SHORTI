@@ -418,24 +418,23 @@ body:has(.full-page-screen),
 .for-you-actions {
   position: absolute;
   z-index: 2;
-  top: 51.5%;
-  right: 9px;
-  transform: translateY(-28px);
+  right: 10px;
+  bottom: calc(var(--app-bottom-inset) + 276px);
   display: flex;
-  width: 58px;
+  width: 56px;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 16px;
 }
 
 .for-you-action {
   display: flex;
-  width: 58px;
-  min-height: 47px;
+  width: 56px;
+  min-height: 44px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   padding: 0;
   background: transparent;
   color: #fff;
@@ -451,8 +450,8 @@ body:has(.full-page-screen),
 }
 
 .for-you-action > .for-you-outline-icon {
-  width: 31.2px;
-  height: 31.2px;
+  width: 28px;
+  height: 28px;
   overflow: visible;
   stroke: currentColor;
   stroke-width: 2;
@@ -461,8 +460,8 @@ body:has(.full-page-screen),
 }
 
 .for-you-action > .for-you-heart-icon {
-  width: 31.2px;
-  height: 31.2px;
+  width: 28px;
+  height: 28px;
   stroke-width: 2;
 }
 
@@ -479,8 +478,8 @@ body:has(.full-page-screen),
 }
 
 .for-you-share-icon {
-  width: 31.2px;
-  height: 31.2px;
+  width: 28px;
+  height: 28px;
   overflow: visible;
   stroke: currentColor;
   stroke-width: 2;
@@ -4288,4 +4287,29 @@ body:has(.full-page-screen),
   stroke: currentColor;
   stroke-width: 2.2;
   stroke-linecap: round;
+}
+
+/* Рисунок динамика заполняет свой viewBox плотнее остальных иконок, поэтому при
+   равном размере выглядит крупнее — уменьшен отдельно. */
+.for-you-action > .for-you-sound-icon {
+  width: 19px;
+  height: 19px;
+}
+
+/* Описание стало кнопкой: стрелка после многоточия ведёт на страницу сериала. */
+.for-you-summary {
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.for-you-summary > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.for-you-summary > svg {
+  flex: 0 0 auto;
+  opacity: 0.85;
 }
