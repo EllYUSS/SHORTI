@@ -1331,11 +1331,12 @@ export default function Prototype() {
                 </svg>
                 <span>{watchLiked ? "1,9 т" : "1,8 т"}</span>
               </button>
-              <button className="watch-action watch-more-action" type="button" aria-expanded={watchSynopsisExpanded} aria-label={watchSynopsisExpanded ? "Свернуть описание" : "Подробнее о сериале"} onClick={() => setWatchSynopsisExpanded((expanded) => !expanded)}>
+              <button className="watch-action watch-share-action" type="button" aria-label="Поделиться сериалом" onClick={() => void shareShow(selectedShow)}>
                 <svg className="for-you-share-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
                   <path d="M5.05 4.6h13.4a3 3 0 0 1 2.45 4.72l-6.82 10.02a2.75 2.75 0 0 1-4.9-1.04L8 12.85 3.65 9.4a3 3 0 0 1 1.4-4.8Z" />
                   <path d="m8 12.85 7.2-4.4" />
                 </svg>
+                <span>312</span>
               </button>
             </div>
 

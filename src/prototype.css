@@ -3514,7 +3514,7 @@ body:has(.full-page-screen),
   color: #ff4057 !important;
 }
 
-.watch-more-action > .for-you-share-icon {
+.watch-share-action > .for-you-share-icon {
   display: block;
   width: 30px;
   height: 30px;
